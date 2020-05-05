@@ -52,16 +52,22 @@ If you configure your logging in an XML file, you need to register the assembly 
 ### Code
 To add the Logz.io target via code, add the following lines:
 
-```C#			
-	var config = new LoggingConfiguration();
-	var logzioTarget = new LogzioTarget {
-		Token = "DKJiomZjbFyVvssJDmUAWeEOSNnDARWz",
-		// Uncomment and edit this line to add a proxy routing
-		// ProxyAddress = "http://your.proxy.com:port"
-	};
-	config.AddTarget("Logzio", logzioTarget);
-	config.AddRule(LogLevel.Debug, LogLevel.Fatal, "Logzio", "*");
-	LogManager.Configuration = config;
+```csharp
+var hierarchy = (Hierarchy)LogManager.GetRepository();
+var logzioAppender = new LogzioAppender();
+
+// Replace these parameters with your configuration
+logzioAppender.AddToken("<<SHIPPING-TOKEN>>");
+logzioAppender.AddType("log4net");
+logzioAppender.AddListenerUrl("<<LISTENER-HOST>>:8071");
+logzioAppender.AddBufferSize("100");
+logzioAppender.AddBufferTimeout("00:00:05");
+logzioAppender.AddRetriesMaxAttempts("3");
+logzioAppender.AddRetriesInterval("00:00:02");
+logzioAppender.AddDebug(false);
+
+hierarchy.Root.AddAppender(logzioAppender);
+hierarchy.Configured = true;
 ```
 
 ## Context Properties
